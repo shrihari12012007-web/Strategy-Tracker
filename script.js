@@ -47,3 +47,26 @@ function deleteTask(index) {
 }
 
 updateUI();
+function updateUI() {
+    const percentEl = document.getElementById('percent');
+    const circle = document.getElementById('progressCircle');
+    const list = document.getElementById('taskList');
+    list.innerHTML = '';
+    
+    let completedCount = 0;
+    routines.forEach((item, index) => {
+        if(item.completed) completedCount++;
+        // ... (rest of your list rendering code remains the same)
+    });
+
+    const percent = routines.length ? Math.round((completedCount / routines.length) * 100) : 0;
+    
+    // Update Text
+    percentEl.innerText = `${percent}%`;
+    
+    // Update Circle: 100 - percent = offset
+    const offset = 100 - percent;
+    circle.style.strokeDashoffset = offset;
+    
+    localStorage.setItem('routines', JSON.stringify(routines));
+}
