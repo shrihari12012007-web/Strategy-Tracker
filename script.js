@@ -3,7 +3,7 @@ let routines = JSON.parse(localStorage.getItem('routines')) || [];
 function updateUI() {
     const list = document.getElementById('taskList');
     const percentEl = document.getElementById('percent');
-    const bar = document.getElementById('progressBar');
+    const circle = document.getElementById('progressCircle');
     list.innerHTML = '';
     
     let completedCount = 0;
@@ -22,8 +22,15 @@ function updateUI() {
     });
 
     const percent = routines.length ? Math.round((completedCount / routines.length) * 100) : 0;
+    
+    // Update Text
     percentEl.innerText = `${percent}%`;
-    bar.style.width = `${percent}%`;
+    
+    // Update Circle: SVG stroke-dashoffset logic
+    // 100 - percent works because stroke-dasharray is 100
+    const offset = 100 - percent;
+    circle.style.strokeDashoffset = offset;
+    
     localStorage.setItem('routines', JSON.stringify(routines));
 }
 
@@ -47,26 +54,3 @@ function deleteTask(index) {
 }
 
 updateUI();
-function updateUI() {
-    const percentEl = document.getElementById('percent');
-    const circle = document.getElementById('progressCircle');
-    const list = document.getElementById('taskList');
-    list.innerHTML = '';
-    
-    let completedCount = 0;
-    routines.forEach((item, index) => {
-        if(item.completed) completedCount++;
-        // ... (rest of your list rendering code remains the same)
-    });
-
-    const percent = routines.length ? Math.round((completedCount / routines.length) * 100) : 0;
-    
-    // Update Text
-    percentEl.innerText = `${percent}%`;
-    
-    // Update Circle: 100 - percent = offset
-    const offset = 100 - percent;
-    circle.style.strokeDashoffset = offset;
-    
-    localStorage.setItem('routines', JSON.stringify(routines));
-}
