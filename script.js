@@ -1,34 +1,48 @@
-let routines = JSON.parse(localStorage.getItem('routines')) || [
-    { id: 1, task: "Market Strategy", completed: false },
-    { id: 2, task: "Coding Practice", completed: false }
-];
+let routines = JSON.parse(localStorage.getItem('routines')) || [];
 
 function updateUI() {
     const list = document.getElementById('taskList');
     const percentEl = document.getElementById('percent');
+    const bar = document.getElementById('progressBar');
     list.innerHTML = '';
     
     let completedCount = 0;
-    
-    routines.forEach(item => {
+    routines.forEach((item, index) => {
         if(item.completed) completedCount++;
-        
         const div = document.createElement('div');
-        div.className = "flex items-center gap-3 p-2 border rounded";
+        div.className = "flex items-center justify-between p-2 border rounded";
         div.innerHTML = `
-            <input type="checkbox" ${item.completed ? 'checked' : ''} onchange="toggle(${item.id})">
-            <span>${item.task}</span>
+            <div class="flex items-center gap-2">
+                <input type="checkbox" ${item.completed ? 'checked' : ''} onchange="toggle(${index})">
+                <span>${item.task}</span>
+            </div>
+            <button onclick="deleteTask(${index})" class="text-red-500 text-sm">Delete</button>
         `;
         list.appendChild(div);
     });
 
     const percent = routines.length ? Math.round((completedCount / routines.length) * 100) : 0;
     percentEl.innerText = `${percent}%`;
+    bar.style.width = `${percent}%`;
     localStorage.setItem('routines', JSON.stringify(routines));
 }
 
-function toggle(id) {
-    routines = routines.map(r => r.id === id ? {...r, completed: !r.completed} : r);
+function addTask() {
+    const input = document.getElementById('taskInput');
+    if(input.value) {
+        routines.push({ task: input.value, completed: false });
+        input.value = '';
+        updateUI();
+    }
+}
+
+function toggle(index) {
+    routines[index].completed = !routines[index].completed;
+    updateUI();
+}
+
+function deleteTask(index) {
+    routines.splice(index, 1);
     updateUI();
 }
 
