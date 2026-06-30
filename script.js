@@ -30,13 +30,13 @@ function updateUI() {
     circle.style.strokeDashoffset = 100 - percent;
     
     // Automatic Color Logic
-    circle.classList.remove('text-red-500', 'text-yellow-400', 'text-green-400');
+    
     if (percent < 40) {
-        circle.classList.add('text-red-500');
+        circle.style.stroke = 'oklch(70.4% 0.191 22.216)';
     } else if (percent < 80) {
-        circle.classList.add('text-yellow-400');
+        circle.style.stroke = 'oklch(93.8% 0.127 124.321)';
     } else {
-        circle.classList.add('text-green-400');
+        circle.style.stroke = 'oklch(79.2% 0.209 151.711)';
     }
     
     localStorage.setItem('routines', JSON.stringify(routines));
