@@ -1,5 +1,7 @@
 let routines = JSON.parse(localStorage.getItem('routines')) || [];
+let audioCtx;
 
+// --- UI Logic ---
 function updateUI() {
     const list = document.getElementById('taskList');
     const percentEl = document.getElementById('percent');
@@ -22,15 +24,10 @@ function updateUI() {
     });
 
     const percent = routines.length ? Math.round((completedCount / routines.length) * 100) : 0;
-    
-    // Update Text
     percentEl.innerText = `${percent}%`;
-    
-    // Update Circle Offset
     circle.style.strokeDashoffset = 100 - percent;
     
     // Automatic Color Logic
-    
     if (percent < 40) {
         circle.style.stroke = 'oklch(70.4% 0.191 22.216)';
     } else if (percent < 80) {
@@ -41,6 +38,49 @@ function updateUI() {
     
     localStorage.setItem('routines', JSON.stringify(routines));
 }
+
+// --- Alarm & Time Logic ---
+function playAlarmSound() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+
+    const oscillator = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+
+    oscillator.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+
+    oscillator.type = 'square';
+    oscillator.frequency.setValueAtTime(880, audioCtx.currentTime);
+    gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+
+    oscillator.start();
+    oscillator.stop(audioCtx.currentTime + 2);
+}
+
+function setAlarm(alarmTime) {
+    const interval = setInterval(() => {
+        const now = new Date();
+        const currentTime = now.getHours().toString().padStart(2, '0') + ":" + 
+                            now.getMinutes().toString().padStart(2, '0');
+        
+        if (currentTime === alarmTime) {
+            playAlarmSound();
+            alert("Time for your strategy routine!");
+            clearInterval(interval);
+        }
+    }, 1000);
+}
+
+function activateAlarm() {
+    const time = document.getElementById('alarmInput').value;
+    if (time) {
+        alert("Alarm set for " + time);
+        setAlarm(time);
+    }
+}
+
+// --- Task Management ---
 function addTask() {
     const input = document.getElementById('taskInput');
     if(input.value) {
@@ -61,39 +101,3 @@ function deleteTask(index) {
 }
 
 updateUI();
-
-let audioCtx;
-
-function playAlarmSound() {
-    // Resume context if it was suspended (required by modern browsers)
-    if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    }
-    if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-    }
-
-    const oscillator = audioCtx.createOscillator();
-    const gainNode = audioCtx.createGain();
-
-    oscillator.connect(gainNode);
-    gainNode.connect(audioCtx.destination);
-
-    oscillator.type = 'square';
-    oscillator.frequency.setValueAtTime(880, audioCtx.currentTime); // High pitch alarm
-    gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
-
-    oscillator.start();
-    oscillator.stop(audioCtx.currentTime + 2); // Beeps for 2 seconds
-}
-function activateAlarm() {
-    const time = document.getElementById('alarmInput').value;
-    if (time) {
-        // Initialize the audio context on this click
-        if (!audioCtx) {
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        }
-        alert("Alarm set for " + time);
-        setAlarm(time);
-    }
-}
