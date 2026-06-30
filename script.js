@@ -41,9 +41,20 @@ function updateUI() {
 
 // --- Alarm & Time Logic ---
 function playAlarmSound() {
+    // Re-initialize or resume the audio context
     if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    if (audioCtx.state === 'suspended') audioCtx.resume();
+    
+    // This is the key: Force the state to 'running'
+    if (audioCtx.state === 'suspended') {
+        audioCtx.resume().then(() => {
+            triggerBeep();
+        });
+    } else {
+        triggerBeep();
+    }
+}
 
+function triggerBeep() {
     const oscillator = audioCtx.createOscillator();
     const gainNode = audioCtx.createGain();
 
@@ -55,8 +66,9 @@ function playAlarmSound() {
     gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
 
     oscillator.start();
-    oscillator.stop(audioCtx.currentTime + 2);
+    oscillator.stop(audioCtx.currentTime + 2); // Beeps for 2 seconds
 }
+
 
 function setAlarm(alarmTime) {
     const interval = setInterval(() => {
