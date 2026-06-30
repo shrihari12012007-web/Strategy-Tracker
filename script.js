@@ -61,3 +61,24 @@ function deleteTask(index) {
 }
 
 updateUI();
+
+function setAlarm(alarmTime) {
+    alert("Alarm set for " + alarmTime);
+    
+    const interval = setInterval(() => {
+        const now = new Date();
+        const currentTime = now.getHours().toString().padStart(2, '0') + ":" + 
+                            now.getMinutes().toString().padStart(2, '0');
+        
+        if (currentTime === alarmTime) {
+            alert("Time for your strategy routine!");
+            clearInterval(interval); // Stop the alarm once it rings
+        }
+    }, 1000); // Checks every 1000ms (1 second)
+}
+function activateAlarm() {
+    const time = document.getElementById('alarmInput').value;
+    if(time) {
+        setAlarm(time);
+    }
+}
