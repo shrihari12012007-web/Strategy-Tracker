@@ -37,5 +37,22 @@
         <button onclick="activateAlarm()" class="bg-white/20 text-white px-4 py-2 rounded hover:bg-white/30">Set</button>
     </div>
 </div>
+<div class="mt-6 border-t border-white/20 pt-4 space-y-4">
+    
+    <div>
+        <label class="text-white text-sm block mb-1">Set Routine Alarm (Time Setter):</label>
+        <div class="flex gap-2">
+            <input type="time" id="alarmInput" class="bg-white/10 border border-white/20 text-white rounded p-2 flex-grow">
+            <button onclick="activateAlarm()" class="bg-white/20 text-white px-4 py-2 rounded hover:bg-white/30 transition">Set</button>
+        </div>
+    </div>
+
+    <div>
+        <label class="text-white text-sm block mb-1">Live Local Time Check:</label>
+        <button onclick="checkLocalTime()" class="w-full bg-blue-500/30 text-white px-4 py-2 rounded hover:bg-blue-500/50 transition">Check Local Time Now</button>
+        <p id="currentTimeDisplay" class="text-white/70 text-xs mt-2 text-center"></p>
+    </div>
+    
+</div>
 </body>
 </html>

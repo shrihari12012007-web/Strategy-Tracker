@@ -100,4 +100,36 @@ function deleteTask(index) {
     updateUI();
 }
 
-updateUI();
+updateUI();// Display local time when the button is clicked
+function checkLocalTime() {
+    const now = new Date();
+    const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    document.getElementById('currentTimeDisplay').innerText = "Current local time is: " + timeString;
+}
+
+// Logic for Time Setter
+function activateAlarm() {
+    const time = document.getElementById('alarmInput').value;
+    if (time) {
+        alert("Alarm successfully set for " + time);
+        setAlarm(time);
+    }
+}
+
+// Logic to monitor the set time
+function setAlarm(alarmTime) {
+    // Clear any existing intervals to prevent multiple alarms
+    if (window.alarmInterval) clearInterval(window.alarmInterval);
+
+    window.alarmInterval = setInterval(() => {
+        const now = new Date();
+        const currentTime = now.getHours().toString().padStart(2, '0') + ":" + 
+                            now.getMinutes().toString().padStart(2, '0');
+        
+        if (currentTime === alarmTime) {
+            playAlarmSound();
+            alert("Time for your strategy routine!");
+            clearInterval(window.alarmInterval);
+        }
+    }, 1000);
+}
