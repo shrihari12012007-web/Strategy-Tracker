@@ -62,34 +62,38 @@ function deleteTask(index) {
 
 updateUI();
 
+let audioCtx;
+
 function playAlarmSound() {
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    // Resume context if it was suspended (required by modern browsers)
+    if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
+
     const oscillator = audioCtx.createOscillator();
     const gainNode = audioCtx.createGain();
 
     oscillator.connect(gainNode);
     gainNode.connect(audioCtx.destination);
 
-    oscillator.type = 'square'; // Sounds like an old-school alarm
-    oscillator.frequency.setValueAtTime(880, audioCtx.currentTime); // 880Hz frequency
+    oscillator.type = 'square';
+    oscillator.frequency.setValueAtTime(880, audioCtx.currentTime); // High pitch alarm
     gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
 
     oscillator.start();
-    oscillator.stop(audioCtx.currentTime + 2); // Plays for 2 seconds
+    oscillator.stop(audioCtx.currentTime + 2); // Beeps for 2 seconds
 }
-
-function setAlarm(alarmTime) {
-    alert("Alarm set for " + alarmTime);
-    
-    const interval = setInterval(() => {
-        const now = new Date();
-        const currentTime = now.getHours().toString().padStart(2, '0') + ":" + 
-                            now.getMinutes().toString().padStart(2, '0');
-        
-        if (currentTime === alarmTime) {
-            playAlarmSound();
-            alert("Time for your strategy routine!");
-            clearInterval(interval);
+function activateAlarm() {
+    const time = document.getElementById('alarmInput').value;
+    if (time) {
+        // Initialize the audio context on this click
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         }
-    }, 1000);
+        alert("Alarm set for " + time);
+        setAlarm(time);
+    }
 }
