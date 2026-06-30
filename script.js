@@ -62,6 +62,22 @@ function deleteTask(index) {
 
 updateUI();
 
+function playAlarmSound() {
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const oscillator = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+
+    oscillator.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+
+    oscillator.type = 'square'; // Sounds like an old-school alarm
+    oscillator.frequency.setValueAtTime(880, audioCtx.currentTime); // 880Hz frequency
+    gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+
+    oscillator.start();
+    oscillator.stop(audioCtx.currentTime + 2); // Plays for 2 seconds
+}
+
 function setAlarm(alarmTime) {
     alert("Alarm set for " + alarmTime);
     
@@ -71,14 +87,9 @@ function setAlarm(alarmTime) {
                             now.getMinutes().toString().padStart(2, '0');
         
         if (currentTime === alarmTime) {
+            playAlarmSound();
             alert("Time for your strategy routine!");
-            clearInterval(interval); // Stop the alarm once it rings
+            clearInterval(interval);
         }
-    }, 1000); // Checks every 1000ms (1 second)
-}
-function activateAlarm() {
-    const time = document.getElementById('alarmInput').value;
-    if(time) {
-        setAlarm(time);
-    }
+    }, 1000);
 }
