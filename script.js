@@ -45,3 +45,18 @@ function setAlarm(alarmTime) {
         }
     }, 1000);
 }
+function checkLocalTime() {
+    console.log("Check Local Time button clicked!"); // Check this in F12 Console
+    
+    const display = document.getElementById('currentTimeDisplay');
+    if (!display) {
+        console.error("Could not find element with ID 'currentTimeDisplay'");
+        return;
+    }
+
+    const now = new Date();
+    const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    
+    display.innerText = "Current local time is: " + timeString;
+    console.log("Time displayed:", timeString);
+}
