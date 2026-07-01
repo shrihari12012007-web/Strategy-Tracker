@@ -2,24 +2,28 @@ let audioCtx;
 let alarmOscillator; // Store this globally to stop it later
 
 function playAlarmSound() {
+    // 1. Initialize context
     if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    if (audioCtx.state === 'suspended') audioCtx.resume();
+    
+    // 2. Resume if suspended
+    if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
 
-    // Create the sound pipeline
-    alarmOscillator = audioCtx.createOscillator();
+    // 3. Create sound chain
+    const oscillator = audioCtx.createOscillator();
     const gainNode = audioCtx.createGain();
 
-    alarmOscillator.connect(gainNode);
+    oscillator.connect(gainNode);
     gainNode.connect(audioCtx.destination);
 
-    alarmOscillator.type = 'square';
-    alarmOscillator.frequency.setValueAtTime(880, audioCtx.currentTime);
+    oscillator.type = 'square';
+    oscillator.frequency.setValueAtTime(880, audioCtx.currentTime); 
     gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
 
-    alarmOscillator.start();
-    
-    // Show the button so the user can interact with the page
-    document.getElementById('stopAlarmBtn').classList.remove('hidden');
+    // 4. Play
+    oscillator.start();
+    oscillator.stop(audioCtx.currentTime + 2); // 2-second beep
 }
 
 function stopAlarm() {
