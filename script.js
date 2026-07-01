@@ -1,81 +1,62 @@
 let audioCtx;
-let alarmOscillator; // Store this globally to stop it later
+let alarmInterval; // Keeps track of the infinite beeping
 
-function playAlarmSound() {
+// Confirmation sound when the user clicks "Set"
+function playConfirmSound() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = audioCtx.createOscillator();
+    osc.connect(audioCtx.destination);
+    osc.frequency.setValueAtTime(440, audioCtx.currentTime); // A note
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.1); // Short pulse
+}
+
+// Continuous Alarm Sound
+function startContinuousAlarm() {
     if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     if (audioCtx.state === 'suspended') audioCtx.resume();
 
-    const now = audioCtx.currentTime;
-
-    // Create a rhythmic alarm pattern (10 pulses)
-    for (let i = 0; i < 10; i++) {
-        const oscillator = audioCtx.createOscillator();
-        const gainNode = audioCtx.createGain();
-
-        oscillator.connect(gainNode);
-        gainNode.connect(audioCtx.destination);
-
-        // Alternate frequencies for an "urgent" warble sound
-        oscillator.frequency.setValueAtTime(i % 2 === 0 ? 880 : 660, now + (i * 0.2));
-        
-        // Fast attack/release for a sharp, urgent "beep"
-        gainNode.gain.setValueAtTime(0, now + (i * 0.2));
-        gainNode.gain.linearRampToValueAtTime(0.2, now + (i * 0.2) + 0.05);
-        gainNode.gain.linearRampToValueAtTime(0, now + (i * 0.2) + 0.15);
-
-        oscillator.start(now + (i * 0.2));
-        oscillator.stop(now + (i * 0.2) + 0.2);
-    }
-    
-    // Show the "Stop Alarm" button to allow user interaction
-    document.getElementById('stopAlarmBtn').classList.remove('hidden');
-}
-
-function stopAlarm() {
-    if (alarmOscillator) {
-        alarmOscillator.stop();
-    }
-    document.getElementById('stopAlarmBtn').classList.add('hidden');
-    alert("Alarm Stopped!");
-}
-
-// Update your setAlarm loop to trigger the new sound
-function setAlarm(alarmTime) {
-    if (window.alarmInterval) clearInterval(window.alarmInterval);
-
-    window.alarmInterval = setInterval(() => {
-        const now = new Date();
-        const currentTime = now.getHours().toString().padStart(2, '0') + ":" + 
-                            now.getMinutes().toString().padStart(2, '0');
-        
-        if (currentTime === alarmTime) {
-            playAlarmSound();
-            clearInterval(window.alarmInterval);
-        }
-    }, 1000);
-}
-function checkLocalTime() {
-    console.log("Check Local Time button clicked!"); // Check this in F12 Console
-    
-    const display = document.getElementById('currentTimeDisplay');
-    if (!display) {
-        console.error("Could not find element with ID 'currentTimeDisplay'");
-        return;
-    }
-
-    const now = new Date();
-    const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    
-    display.innerText = "Current local time is: " + timeString;
-    console.log("Time displayed:", timeString);
-}
-function stopAlarm() {
-    // This stops the sound immediately
-    if (audioCtx) {
-        audioCtx.close().then(() => {
-            audioCtx = null; // Reset context
+    // Use setInterval to repeat the beep pattern infinitely
+    window.alarmLoop = setInterval(() => {
+        const now = audioCtx.currentTime;
+        // Play two-tone pattern
+        [880, 660].forEach((freq, i) => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.frequency.setValueAtTime(freq, now + (i * 0.1));
+            gain.gain.setValueAtTime(0.2, now + (i * 0.1));
+            gain.gain.exponentialRampToValueAtTime(0.01, now + (i * 0.1) + 0.1);
+            osc.start(now + (i * 0.1));
+            osc.stop(now + (i * 0.1) + 0.1);
         });
-    }
+    }, 300); // Repeat every 300ms
+}
+
+function stopAlarm() {
+    clearInterval(window.alarmLoop); // Stops the infinite beeping loop
     document.getElementById('stopAlarmBtn').classList.add('hidden');
     alert("Alarm Stopped!");
+}
+
+function activateAlarm() {
+    const time = document.getElementById('alarmInput').value;
+    if (time) {
+        playConfirmSound(); // Beep when set
+        alert("Alarm set for " + time);
+        
+        // Monitoring loop
+        alarmInterval = setInterval(() => {
+            const now = new Date();
+            const currentTime = now.getHours().toString().padStart(2, '0') + ":" + 
+                                now.getMinutes().toString().padStart(2, '0');
+            
+            if (currentTime === time) {
+                startContinuousAlarm();
+                document.getElementById('stopAlarmBtn').classList.remove('hidden');
+                clearInterval(alarmInterval); // Stop monitoring once alarm starts
+            }
+        }, 1000);
+    }
 }
