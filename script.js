@@ -5,25 +5,30 @@ function playAlarmSound() {
     if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     if (audioCtx.state === 'suspended') audioCtx.resume();
 
-    // Create a loop to simulate "beep-beep"
-    for (let i = 0; i < 5; i++) {
+    const now = audioCtx.currentTime;
+
+    // Create a rhythmic alarm pattern (10 pulses)
+    for (let i = 0; i < 10; i++) {
         const oscillator = audioCtx.createOscillator();
         const gainNode = audioCtx.createGain();
 
         oscillator.connect(gainNode);
         gainNode.connect(audioCtx.destination);
 
-        oscillator.type = 'square';
-        oscillator.frequency.setValueAtTime(880, audioCtx.currentTime + (i * 0.5));
+        // Alternate frequencies for an "urgent" warble sound
+        oscillator.frequency.setValueAtTime(i % 2 === 0 ? 880 : 660, now + (i * 0.2));
         
-        // Envelope: Fade in/out quickly to make it sound like a "beep"
-        gainNode.gain.setValueAtTime(0, audioCtx.currentTime + (i * 0.5));
-        gainNode.gain.linearRampToValueAtTime(0.1, audioCtx.currentTime + (i * 0.5) + 0.05);
-        gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + (i * 0.5) + 0.2);
+        // Fast attack/release for a sharp, urgent "beep"
+        gainNode.gain.setValueAtTime(0, now + (i * 0.2));
+        gainNode.gain.linearRampToValueAtTime(0.2, now + (i * 0.2) + 0.05);
+        gainNode.gain.linearRampToValueAtTime(0, now + (i * 0.2) + 0.15);
 
-        oscillator.start(audioCtx.currentTime + (i * 0.5));
-        oscillator.stop(audioCtx.currentTime + (i * 0.5) + 0.2);
+        oscillator.start(now + (i * 0.2));
+        oscillator.stop(now + (i * 0.2) + 0.2);
     }
+    
+    // Show the "Stop Alarm" button to allow user interaction
+    document.getElementById('stopAlarmBtn').classList.remove('hidden');
 }
 
 function stopAlarm() {
@@ -63,4 +68,14 @@ function checkLocalTime() {
     
     display.innerText = "Current local time is: " + timeString;
     console.log("Time displayed:", timeString);
+}
+function stopAlarm() {
+    // This stops the sound immediately
+    if (audioCtx) {
+        audioCtx.close().then(() => {
+            audioCtx = null; // Reset context
+        });
+    }
+    document.getElementById('stopAlarmBtn').classList.add('hidden');
+    alert("Alarm Stopped!");
 }
