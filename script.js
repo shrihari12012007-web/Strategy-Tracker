@@ -2,28 +2,28 @@ let audioCtx;
 let alarmOscillator; // Store this globally to stop it later
 
 function playAlarmSound() {
-    // 1. Initialize context
     if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    
-    // 2. Resume if suspended
-    if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+
+    // Create a loop to simulate "beep-beep"
+    for (let i = 0; i < 5; i++) {
+        const oscillator = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+
+        oscillator.type = 'square';
+        oscillator.frequency.setValueAtTime(880, audioCtx.currentTime + (i * 0.5));
+        
+        // Envelope: Fade in/out quickly to make it sound like a "beep"
+        gainNode.gain.setValueAtTime(0, audioCtx.currentTime + (i * 0.5));
+        gainNode.gain.linearRampToValueAtTime(0.1, audioCtx.currentTime + (i * 0.5) + 0.05);
+        gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + (i * 0.5) + 0.2);
+
+        oscillator.start(audioCtx.currentTime + (i * 0.5));
+        oscillator.stop(audioCtx.currentTime + (i * 0.5) + 0.2);
     }
-
-    // 3. Create sound chain
-    const oscillator = audioCtx.createOscillator();
-    const gainNode = audioCtx.createGain();
-
-    oscillator.connect(gainNode);
-    gainNode.connect(audioCtx.destination);
-
-    oscillator.type = 'square';
-    oscillator.frequency.setValueAtTime(880, audioCtx.currentTime); 
-    gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
-
-    // 4. Play
-    oscillator.start();
-    oscillator.stop(audioCtx.currentTime + 2); // 2-second beep
 }
 
 function stopAlarm() {
