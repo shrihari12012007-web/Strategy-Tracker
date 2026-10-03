@@ -1,4 +1,4 @@
-# ðŸ“ˆ Strategy Tracker â€” Productivity & Strategy PWA
+# Strategy Tracker - Productivity & Strategy PWA
 
 <div align="center">
   <a href="https://strategy-tracker-nine.vercel.app">
@@ -16,34 +16,34 @@ A personal productivity tool designed to track market strategies, routine consis
 
 ---
 
-## ðŸŒ Live URL
+## Live URL
 
 - **Live Application:** [https://strategy-tracker-nine.vercel.app](https://strategy-tracker-nine.vercel.app)
 - **GitHub Repository:** [https://github.com/shrihari12012007-web/Strategy-Tracker](https://github.com/shrihari12012007-web/Strategy-Tracker)
 
 ---
 
-## âœ¨ Key Features
+## Key Features
 
-- **ðŸ“Š Visual Progress Tracking:** Dynamic circular SVG visualization of weekly productivity and strategy execution.
-- **ðŸ’¾ Local Storage Persistence:** Automatically preserves strategy data across browser sessions and reloads without backend overhead.
-- **ðŸ“± Installable Progressive Web App (PWA):** Installs directly as a native application on Windows, macOS, Android, and iOS.
-- **âš¡ Clean Tailwind UI:** Minimalist, high-focus interface built for productivity.
+- **Visual Progress Tracking:** Dynamic circular SVG visualization of weekly productivity and strategy execution.
+- **Local Storage Persistence:** Automatically preserves strategy data across browser sessions and reloads without backend overhead.
+- **Installable Progressive Web App (PWA):** Installs directly as a native application on Windows, macOS, Android, and iOS.
+- **Clean Tailwind UI:** Minimalist, high-focus interface built for productivity.
 
 ---
 
-## ðŸ› ï¸ Tech Stack
+## Tech Stack
 
 - **Frontend:** HTML5, Modern ES6+ JavaScript, Tailwind CSS
 - **Architecture:** Progressive Web App (manifest.json)
-- **Deployment:** Vercel & Render (ender.yaml)
+- **Deployment:** Vercel & Render (render.yaml)
 
 ---
 
-## ðŸš€ One-Click Deploy to Render
+## One-Click Deploy to Render
 
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/shrihari12012007-web/Strategy-Tracker)
 
 ---
 
-Â© 2026 Strategy Tracker â€¢ Developed by Shree Hari S B
+Developed by Shree Hari S B
