@@ -1,4 +1,4 @@
-# Strategy Tracker - Productivity & Strategy PWA
+# :chart_with_upwards_trend: Strategy Tracker — Productivity & Strategy PWA :sparkles:
 
 <div align="center">
   <a href="https://strategy-tracker-nine.vercel.app">
@@ -16,34 +16,34 @@ A personal productivity tool designed to track market strategies, routine consis
 
 ---
 
-## Live URL
+## :globe_with_meridians: Live URL
 
-- **Live Application:** [https://strategy-tracker-nine.vercel.app](https://strategy-tracker-nine.vercel.app)
-- **GitHub Repository:** [https://github.com/shrihari12012007-web/Strategy-Tracker](https://github.com/shrihari12012007-web/Strategy-Tracker)
-
----
-
-## Key Features
-
-- **Visual Progress Tracking:** Dynamic circular SVG visualization of weekly productivity and strategy execution.
-- **Local Storage Persistence:** Automatically preserves strategy data across browser sessions and reloads without backend overhead.
-- **Installable Progressive Web App (PWA):** Installs directly as a native application on Windows, macOS, Android, and iOS.
-- **Clean Tailwind UI:** Minimalist, high-focus interface built for productivity.
+- :rocket: **Live Application:** [https://strategy-tracker-nine.vercel.app](https://strategy-tracker-nine.vercel.app)
+- :octocat: **GitHub Repository:** [https://github.com/shrihari12012007-web/Strategy-Tracker](https://github.com/shrihari12012007-web/Strategy-Tracker)
 
 ---
 
-## Tech Stack
+## :sparkles: Key Features
 
-- **Frontend:** HTML5, Modern ES6+ JavaScript, Tailwind CSS
-- **Architecture:** Progressive Web App (manifest.json)
-- **Deployment:** Vercel & Render (render.yaml)
+- :bar_chart: **Visual Progress Tracking:** Dynamic circular SVG visualization of weekly productivity and strategy execution.
+- :floppy_disk: **Local Storage Persistence:** Automatically preserves strategy data across browser sessions and reloads without backend overhead.
+- :iphone: **Installable Progressive Web App (PWA):** Installs directly as a native application on Windows, macOS, Android, and iOS.
+- :zap: **Clean Tailwind UI:** Minimalist, high-focus interface built for productivity.
 
 ---
 
-## One-Click Deploy to Render
+## :hammer_and_wrench: Tech Stack
+
+- :art: **Frontend:** HTML5, Modern ES6+ JavaScript, Tailwind CSS
+- :package: **Architecture:** Progressive Web App (`manifest.json`)
+- :cloud: **Deployment:** Vercel & Render (`render.yaml`)
+
+---
+
+## :rocket: One-Click Deploy to Render
 
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/shrihari12012007-web/Strategy-Tracker)
 
 ---
 
-Developed by Shree Hari S B
+:star: Developed by Shree Hari S B
